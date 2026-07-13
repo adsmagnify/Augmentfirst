@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #000000;
+  --color-panel: #141414;
+  --color-panel-soft: #1b1b1b;
+  --color-gold: #d99625;
+  --color-gold-deep: #b87f1f;
+  --color-ink: #ffffff;
+  --color-muted: #9a9a9a;
+  --color-hairline: rgba(255, 255, 255, 0.14);
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-panel: var(--color-panel);
+  --color-panel-soft: var(--color-panel-soft);
+  --color-gold: var(--color-gold);
+  --color-gold-deep: var(--color-gold-deep);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-hairline: var(--color-hairline);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  color: var(--color-ink);
+  background: var(--color-bg);
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-panel-soft);
+  padding: 0.65rem 0.85rem;
+  font-size: 14px;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+}
+
+.input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(217, 150, 37, 0.18);
+}
+
+select.input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%239a9a9a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.25rem;
+}
+
+select.input option {
+  background: var(--color-panel-soft);
+  color: var(--color-ink);
+}
