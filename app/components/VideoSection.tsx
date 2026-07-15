@@ -12,14 +12,14 @@ export function VideoSection() {
       </h2>
 
       <div
-        className="relative mx-auto mt-8 aspect-video max-w-3xl overflow-hidden rounded-xl border border-[var(--color-hairline)] shadow-[0_25px_50px_-20px_rgba(0,0,0,0.7)]"
+        className="relative mx-auto mt-10 aspect-video max-w-3xl overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.8)] group"
         style={{
           background:
-            "linear-gradient(135deg, var(--color-panel-soft) 0%, var(--color-panel) 55%, #000000 100%)",
+            "linear-gradient(135deg, #101013 0%, #030303 100%)",
         }}
       >
         {playing ? (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-white/80">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-white/80 animate-slide-up">
             <span className="text-sm">
               Drop your video file in and wire this player up to it.
             </span>
@@ -34,10 +34,12 @@ export function VideoSection() {
           <button
             onClick={() => setPlaying(true)}
             aria-label="Play video"
-            className="absolute inset-0 flex items-center justify-center bg-black/10 transition hover:bg-black/20"
+            className="absolute inset-0 flex items-center justify-center bg-black/30 transition duration-300 hover:bg-black/40"
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-lg transition hover:scale-105">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-gold)">
+            {/* Pulsing Play Button */}
+            <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/95 shadow-2xl transition duration-300 group-hover:scale-105 group-hover:bg-white">
+              <span className="absolute inset-0 rounded-full bg-[var(--color-gold)]/20 animate-ping opacity-75" />
+              <svg className="ml-1.5 transition-transform duration-300 group-hover:scale-110" width="24" height="24" viewBox="0 0 24 24" fill="var(--color-gold)">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </span>

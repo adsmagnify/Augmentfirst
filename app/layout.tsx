@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { FloatingCta } from "./components/FloatingCta";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -31,6 +32,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[var(--color-bg)] text-[var(--color-ink)]">
         {children}
+        <FloatingCta />
       </body>
     </html>
   );

@@ -96,19 +96,22 @@ export function ProblemTable() {
               {ROWS.map((row, i) => (
                 <tr
                   key={row.problem}
-                  className={i !== ROWS.length - 1 ? "border-b border-[var(--color-hairline)]" : ""}
+                  className={[
+                    "group transition-all duration-200",
+                    i !== ROWS.length - 1 ? "border-b border-[var(--color-hairline)]" : "",
+                  ].join(" ")}
                 >
-                  <td className="bg-[var(--color-bg)] px-4 py-3.5 align-top">
+                  <td className="px-4 py-4 align-top transition-colors duration-200 group-hover:bg-white/[0.02]">
                     <div className="flex items-start gap-2.5">
-                      <span className="mt-0.5 shrink-0 [&_svg]:h-4 [&_svg]:w-4">
+                      <span className="mt-0.5 shrink-0 [&_svg]:h-4 [&_svg]:w-4 transition-transform duration-200 group-hover:scale-110">
                         <RowIcon name={row.icon} />
                       </span>
-                      <span className="text-[12.5px] leading-snug text-[var(--color-ink)]">
+                      <span className="text-[13px] leading-snug text-[var(--color-ink)] transition-colors duration-200 group-hover:text-[var(--color-gold)] font-medium">
                         {row.problem}
                       </span>
                     </div>
                   </td>
-                  <td className="bg-[var(--color-panel)] px-4 py-3.5 align-top text-[12.5px] font-medium leading-snug text-[var(--color-ink)]">
+                  <td className="bg-[var(--color-panel)] px-4 py-4 align-top text-[13px] font-medium leading-snug text-[var(--color-ink)] transition-colors duration-200 group-hover:bg-white/[0.03]">
                     {row.change}
                   </td>
                 </tr>
@@ -123,9 +126,12 @@ export function ProblemTable() {
         cause, fix it there, not on the surface.
       </p>
 
-      <button className="mt-5 rounded-lg bg-[var(--color-gold)] px-5 py-3 text-[13px] font-semibold text-white transition hover:bg-[var(--color-gold-deep)]">
+      <a
+        href="#book-a-call"
+        className="inline-block mt-6 rounded-lg bg-[var(--color-gold)] px-6 py-3.5 text-[13.5px] font-semibold text-white transition-all hover:bg-[var(--color-gold-deep)] hover:shadow-[0_4px_15px_rgba(217,150,37,0.3)] hover:-translate-y-0.5"
+      >
         See what&apos;s actually happening in your data
-      </button>
+      </a>
     </div>
   );
 }
