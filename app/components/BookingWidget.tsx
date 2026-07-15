@@ -56,10 +56,10 @@ export function BookingWidget({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 ${className}`}
+      className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 ${className}`}
     >
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-        <h3 className="font-serif text-[17px] font-semibold text-[var(--color-ink)]">
+        <h3 className="font-serif text-[17px] text-[var(--color-ink)]">
           Select a Date &amp; Time
         </h3>
         <span className="flex items-center gap-1.5 whitespace-nowrap text-[12.5px] text-[var(--color-muted)]">
@@ -117,9 +117,9 @@ export function BookingWidget({ className = "" }: { className?: string }) {
                     disabled
                       ? "cursor-not-allowed text-white/20"
                       : selected
-                        ? "bg-gradient-to-br from-[var(--color-gold)] to-amber-500 font-semibold text-white shadow-[0_4px_12px_rgba(217,150,37,0.35)] scale-105"
+                        ? "bg-[var(--color-brass)] font-semibold text-[#0a0c10] scale-105"
                         : isToday
-                          ? "border border-[var(--color-gold)] text-[var(--color-gold)] font-medium"
+                          ? "border border-[var(--color-brass)] text-[var(--color-brass)] font-medium"
                           : "text-[var(--color-ink)] hover:bg-white/10 hover:text-white",
                   ].join(" ")}
                 >
@@ -138,8 +138,8 @@ export function BookingWidget({ className = "" }: { className?: string }) {
               className={[
                 "rounded-xl border py-2.5 text-[13.5px] font-medium transition duration-200",
                 selectedTime === t
-                  ? "border-[var(--color-gold)] bg-gradient-to-r from-[var(--color-gold)] to-amber-500 text-white shadow-[0_4px_12px_rgba(217,150,37,0.25)]"
-                  : "border-white/10 bg-white/[0.02] text-[var(--color-ink)] hover:border-[var(--color-gold)] hover:bg-white/[0.05]",
+                  ? "border-[var(--color-brass)] bg-[var(--color-brass)] text-[#0a0c10]"
+                  : "border-white/10 bg-white/[0.02] text-[var(--color-ink)] hover:border-[var(--color-brass)] hover:bg-white/[0.05]",
               ].join(" ")}
             >
               {t}
@@ -149,7 +149,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
       </div>
 
       {selectedDate && selectedTime && (
-        <button className="mt-6 w-full rounded-xl bg-gradient-to-r from-[var(--color-gold)] to-amber-500 py-3.5 text-[14px] font-semibold text-white shadow-[0_4px_15px_rgba(217,150,37,0.3)] transition duration-200 hover:shadow-[0_6px_20px_rgba(217,150,37,0.4)] hover:-translate-y-0.5 active:translate-y-0">
+        <button className="btn-primary mt-6 w-full">
           Confirm {selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}{" "}
           at {selectedTime}
         </button>

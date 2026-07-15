@@ -40,24 +40,24 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-panel)] p-10 text-center shadow-[0_20px_45px_-25px_rgba(0,0,0,0.6)]">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-gold)]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <div className="border border-[var(--color-hairline)] bg-[var(--color-panel)] p-8 text-center sm:p-10">
+        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brass)]">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M5 13l4 4L19 7"
-              stroke="white"
+              stroke="#0a0c10"
               strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </div>
-        <h3 className="font-serif text-xl font-semibold text-[var(--color-ink)]">
-          Request received
+        <h3 className="font-serif text-xl text-[var(--color-ink)]">
+          We&apos;ve got your request
         </h3>
-        <p className="mt-2 text-sm text-[var(--color-muted)]">
-          Thanks — we&apos;ll be in touch shortly with your video and next
-          steps.
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          Vijay&apos;s team will be in touch shortly with next steps for your
+          senior data assessment.
         </p>
       </div>
     );
@@ -65,47 +65,82 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
 
   return (
     <div
+      id="assessment-form"
       className={
         compact
-          ? "rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 shadow-[0_20px_45px_-25px_rgba(0,0,0,0.6)] sm:p-7"
-          : "rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-panel)] p-7 shadow-[0_20px_45px_-25px_rgba(0,0,0,0.6)] sm:p-9"
+          ? "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7"
+          : "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-7 sm:p-9"
       }
     >
-      <div className={compact ? "text-left" : "text-center"}>
+      <div className="text-left">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-brass)]">
+          Lead with clarity
+        </p>
         <h2
           className={
             compact
-              ? "font-serif text-[20px] font-semibold leading-tight text-[var(--color-ink)]"
-              : "font-serif text-[26px] font-semibold leading-tight text-[var(--color-ink)] sm:text-[28px]"
+              ? "mt-2 font-serif text-[22px] leading-tight text-[var(--color-ink)]"
+              : "mt-2 font-serif text-[26px] leading-tight text-[var(--color-ink)] sm:text-[28px]"
           }
         >
-          Request Your Senior Data Assessment
+          Request your Senior Data Assessment
         </h2>
-        <div className={compact ? "mt-3 h-[3px] w-12 bg-[var(--color-gold)]" : "mx-auto mt-4 h-[3px] w-14 bg-[var(--color-gold)]"} />
+        <p className="mt-2 text-[13.5px] leading-relaxed text-[var(--color-muted)]">
+          Thirty minutes of senior attention on what&apos;s actually broken —
+          before you buy another tool.
+        </p>
+        <div className="mt-4 h-px w-12 bg-[var(--color-brass)]" />
       </div>
 
-      <form className={compact ? "mt-6" : "mt-8"} onSubmit={handleSubmit}>
-        <div
-          className={
-            compact
-              ? "grid grid-cols-1 gap-4"
-              : "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
-          }
-        >
-          <div className={compact ? "grid grid-cols-2 gap-4" : "contents"}>
+      <form className="mt-6" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Full Name" htmlFor="fullName">
-              <input id="fullName" name="fullName" type="text" required className="input" />
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                required
+                autoComplete="name"
+                className="input"
+                placeholder="Your name"
+              />
             </Field>
             <Field label="Work Email" htmlFor="workEmail">
-              <input id="workEmail" name="workEmail" type="email" required className="input" />
+              <input
+                id="workEmail"
+                name="workEmail"
+                type="email"
+                required
+                autoComplete="email"
+                className="input"
+                placeholder="you@company.com"
+              />
             </Field>
           </div>
-          <Field label="Company" htmlFor="company">
-            <input id="company" name="company" type="text" required className="input" />
-          </Field>
-          <Field label="Job Title" htmlFor="jobTitle">
-            <input id="jobTitle" name="jobTitle" type="text" required className="input" />
-          </Field>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Company" htmlFor="company">
+              <input
+                id="company"
+                name="company"
+                type="text"
+                required
+                autoComplete="organization"
+                className="input"
+              />
+            </Field>
+            <Field label="Job Title" htmlFor="jobTitle">
+              <input
+                id="jobTitle"
+                name="jobTitle"
+                type="text"
+                required
+                autoComplete="organization-title"
+                className="input"
+              />
+            </Field>
+          </div>
 
           <Field label="Which of these is closest to your situation?" htmlFor="situation">
             <select id="situation" name="situation" required defaultValue="" className="input">
@@ -120,49 +155,63 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
             </select>
           </Field>
 
-          <Field label="Company size" htmlFor="companySize">
-            <select id="companySize" name="companySize" required defaultValue="" className="input">
-              <option value="" disabled>
-                Select an option
-              </option>
-              {COMPANY_SIZES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Company size" htmlFor="companySize">
+              <select
+                id="companySize"
+                name="companySize"
+                required
+                defaultValue=""
+                className="input"
+              >
+                <option value="" disabled>
+                  Select an option
                 </option>
-              ))}
-            </select>
-          </Field>
+                {COMPANY_SIZES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
 
-          <Field label="What's driving this now?" htmlFor="driver">
-            <select id="driver" name="driver" required defaultValue="" className="input">
-              <option value="" disabled>
-                Select an option
-              </option>
-              {DRIVERS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
+            <Field label="What's driving this now?" htmlFor="driver">
+              <select id="driver" name="driver" required defaultValue="" className="input">
+                <option value="" disabled>
+                  Select an option
                 </option>
-              ))}
-            </select>
-          </Field>
-
-          <div className={compact ? "" : "flex flex-col justify-end gap-2"}>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-[var(--color-gold)] py-3.5 text-[15px] font-semibold text-white transition hover:bg-[var(--color-gold-deep)] disabled:opacity-60"
-            >
-              {submitting ? "Submitting…" : "Watch the Video"}
-            </button>
+                {DRIVERS.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </Field>
           </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary mt-1 w-full disabled:opacity-60"
+          >
+            {submitting ? "Sending…" : "Request My Assessment"}
+          </button>
         </div>
 
-        <p className="mt-6 flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted)]">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted)]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect
+              x="5"
+              y="11"
+              width="14"
+              height="9"
+              rx="1.5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
             <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" strokeWidth="1.8" />
           </svg>
-          Your information is confidential. No spam.
+          Confidential. No spam. Built for regulated firms.
         </p>
       </form>
     </div>
@@ -185,7 +234,7 @@ function Field({
         className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]"
       >
         {label}
-        <span className="text-[var(--color-gold)]">*</span>
+        <span className="text-[var(--color-brass)]">*</span>
       </label>
       {children}
     </div>
