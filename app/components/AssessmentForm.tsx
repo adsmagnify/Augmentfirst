@@ -28,14 +28,32 @@ const DRIVERS = [
 export function AssessmentForm({ compact = false }: { compact?: boolean }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
-    window.setTimeout(() => {
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
       setSubmitting(false);
       setSubmitted(true);
-    }, 600);
+    } catch (err) {
+      console.error(err);
+      setSubmitting(false);
+      setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
+    }
   }
 
   if (submitted) {
@@ -56,7 +74,7 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
           We&apos;ve got your request
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-          Vijay&apos;s team will be in touch shortly with next steps for your
+          Augment First team will be in touch shortly with next steps for your
           senior data assessment.
         </p>
       </div>
@@ -196,6 +214,10 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
           >
             {submitting ? "Sending…" : "Request My Assessment"}
           </button>
+
+          {error && (
+            <p className="text-center text-[13px] text-red-400">{error}</p>
+          )}
         </div>
 
         <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted)]">

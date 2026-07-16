@@ -34,6 +34,14 @@ export function BookingWidget({ className = "" }: { className?: string }) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(today);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
+  const [showForm, setShowForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+
   const cells = useMemo(
     () => buildMonthGrid(cursor.getFullYear(), cursor.getMonth()),
     [cursor]
@@ -52,6 +60,148 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     const d = new Date(date);
     d.setHours(23, 59, 59, 999);
     return d < new Date(new Date().setHours(0, 0, 0, 0));
+  }
+
+  async function handleFormSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const formattedDate = selectedDate?.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName,
+          email,
+          company,
+          requestedDate: formattedDate,
+          requestedTime: selectedTime,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      setSubmitting(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setSubmitting(false);
+      setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 text-center rounded-2xl ${className}`}>
+        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brass)]">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#0a0c10"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <h3 className="font-serif text-xl text-[var(--color-ink)]">
+          Strategy Call Requested
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          We have received your request. Augment First team will be in touch at <strong>{email}</strong> to confirm your slot on <strong>{selectedDate?.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} at {selectedTime}</strong>.
+        </p>
+      </div>
+    );
+  }
+
+  if (showForm) {
+    return (
+      <div className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 rounded-2xl ${className}`}>
+        <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-5">
+          <button 
+            type="button"
+            onClick={() => setShowForm(false)}
+            className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10 text-white/70 hover:text-white cursor-pointer"
+            aria-label="Back to calendar"
+          >
+            ←
+          </button>
+          <div>
+            <h3 className="font-serif text-[16px] text-white font-semibold">Confirm Call Details</h3>
+            <p className="text-[12px] text-[var(--color-muted)] mt-0.5">
+              {selectedDate?.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {selectedTime}
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleFormSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="bookingName" className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]">
+              Full Name <span className="text-[var(--color-gold)]">*</span>
+            </label>
+            <input
+              id="bookingName"
+              type="text"
+              required
+              className="input"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="e.g. John Doe"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="bookingEmail" className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]">
+              Work Email <span className="text-[var(--color-gold)]">*</span>
+            </label>
+            <input
+              id="bookingEmail"
+              type="email"
+              required
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g. john@company.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="bookingCompany" className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]">
+              Company <span className="text-[var(--color-gold)]">*</span>
+            </label>
+            <input
+              id="bookingCompany"
+              type="text"
+              required
+              className="input"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              placeholder="e.g. Acme Corp"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary w-full mt-2 cursor-pointer font-semibold py-3"
+          >
+            {submitting ? "Booking..." : "Schedule Strategy Call"}
+          </button>
+
+          {error && (
+            <p className="text-center text-[13px] text-red-400">{error}</p>
+          )}
+        </form>
+      </div>
+    );
   }
 
   return (
@@ -149,7 +299,10 @@ export function BookingWidget({ className = "" }: { className?: string }) {
       </div>
 
       {selectedDate && selectedTime && (
-        <button className="btn-primary mt-6 w-full">
+        <button 
+          onClick={() => setShowForm(true)}
+          className="btn-primary mt-6 w-full cursor-pointer"
+        >
           Confirm {selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}{" "}
           at {selectedTime}
         </button>
