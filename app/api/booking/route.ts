@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         heading: `You're booked, ${fullName}`,
         paragraphs: [
           `Thank you for booking a 30 minute strategy call with Vijay Kanojia.`,
-          `Requested slot: ${requestedDate} at ${requestedTime} (India Standard Time).`,
+          `Requested slot: ${requestedDate} at ${requestedTime} (UK time, GMT/BST).`,
           `Augment First team will be in touch shortly to confirm this slot.`,
         ],
       });

@@ -208,15 +208,12 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     <div
       className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 ${className}`}
     >
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div className="flex flex-col items-center gap-2 text-center">
         <h3 className="font-serif text-[17px] text-[var(--color-ink)]">
           Select a Date &amp; Time
         </h3>
-        <span className="flex items-center gap-1.5 whitespace-nowrap text-[12.5px] text-[var(--color-muted)]">
-          India Standard Time (IST)
-          <svg width="10" height="10" viewBox="0 0 12 8" fill="none">
-            <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+        <span className="text-[12.5px] text-[var(--color-muted)]">
+          UK Time (GMT/BST)
         </span>
       </div>
 
