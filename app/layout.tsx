@@ -16,9 +16,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "AugmentFirst — When the board asks for the numbers",
+  title: "AugmentFirst | When the board asks for the numbers",
   description:
-    "For banks, fintechs, and regulated firms whose data foundation was never built to be trusted. Senior-led assessment with Vijay Kanojia — not another dashboard.",
+    "For banks, fintechs, and regulated firms whose data foundation was never built to be trusted. Senior-led assessment with Vijay Kanojia, not another dashboard.",
 };
 
 export default function RootLayout({

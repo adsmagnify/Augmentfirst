@@ -2,7 +2,7 @@ const ROWS = [
   {
     icon: "stack",
     problem: "Data is missing, duplicated, or inconsistent",
-    change: "Trace the break to its source and fix it there — not in another layer on top.",
+    change: "Trace the break to its source and fix it there, not in another layer on top.",
   },
   {
     icon: "search",
@@ -80,7 +80,7 @@ export function ProblemTable() {
       </h2>
       <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-[var(--color-muted)]">
         Recognition comes first. If one of these lands, you already know the
-        conversation you need — not another vendor pitch.
+        conversation you need, not another vendor pitch.
       </p>
 
       <ul className="mt-8 space-y-0 border-t border-[var(--color-hairline)]">
@@ -106,7 +106,7 @@ export function ProblemTable() {
 
       <p className="mt-6 max-w-2xl text-[14px] leading-relaxed text-[var(--color-muted)]">
         Different starting points. Same senior-led approach: find the actual
-        cause, fix it there — not on the surface.
+        cause, fix it there, not on the surface.
       </p>
     </div>
   );

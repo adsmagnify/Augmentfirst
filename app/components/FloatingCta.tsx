@@ -26,7 +26,7 @@ export function FloatingCta() {
           </div>
           <div>
             <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-brass)]">
-              Vijay Kanojia — Online
+              Vijay Kanojia · Online
             </div>
             <div className="mt-0.5 flex items-center gap-1.5 text-[13px] font-semibold text-[#16233f]">
               Book Your Free Strategy Call
@@ -61,7 +61,7 @@ export function FloatingCta() {
                 Book Your Free Strategy Call
               </h2>
               <p className="mt-0.5 text-[11px] text-[var(--color-muted)]">
-                Direct with Vijay — for data, risk, compliance, and audit leaders.
+                Direct with Vijay, for data, risk, compliance, and audit leaders.
               </p>
             </div>
 

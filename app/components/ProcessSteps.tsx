@@ -2,7 +2,7 @@ const STEPS = [
   {
     n: "01",
     title: "Discover",
-    desc: "Find where trust actually breaks — before anyone suggests another tool.",
+    desc: "Find where trust actually breaks, before anyone suggests another tool.",
   },
   {
     n: "02",
@@ -23,7 +23,7 @@ const STEPS = [
 
 export function ProcessSteps() {
   return (
-    <section className="border-y border-[var(--color-hairline)] bg-[var(--color-panel)]/30 py-16 sm:py-20">
+    <section id="how-we-work" className="scroll-mt-24 border-y border-[var(--color-hairline)] bg-[var(--color-panel)]/30 py-16 sm:py-20">
       <div className="mx-auto max-w-[1000px] px-6">
         <h2 className="text-center font-serif text-[clamp(1.45rem,3vw,1.95rem)] text-[var(--color-ink)]">
           What happens when you work with us

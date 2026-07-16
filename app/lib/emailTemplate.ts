@@ -62,7 +62,7 @@ export function renderMessageEmail({
         <div style="padding:24px;">
           <h2 style="margin:0 0 16px;font-size:18px;color:#111;">${escapeHtml(heading)}</h2>
           ${paragraphHtml}
-          <p style="margin:24px 0 0;font-size:13px;color:#999;">Vijay Kanojia — Founder &amp; Principal Consultant, AugmentFirst</p>
+          <p style="margin:24px 0 0;font-size:13px;color:#999;">Vijay Kanojia, Founder &amp; Principal Consultant, AugmentFirst · London</p>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 
 const COMPANY_LINKS = [
   { label: "Assessment", href: "#assessment" },
-  { label: "How we work", href: "#book-a-call" },
+  { label: "How we work", href: "#how-we-work" },
   { label: "Book a call", href: "#book-a-call" },
 ];
 
@@ -19,7 +19,7 @@ export function Footer() {
             </div>
             <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-[var(--color-muted)]">
               Senior-led data foundation work for banks, fintechs, and regulated
-              firms — fixing trust at the source.
+              firms. Fixing trust at the source.
             </p>
           </div>
 

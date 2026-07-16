@@ -14,15 +14,17 @@ export function ScheduleSection() {
             </h2>
             <div className="mt-5 h-px w-14 bg-[var(--color-brass)]" />
             <p className="mt-6 max-w-md text-[15.5px] leading-relaxed text-[var(--color-muted)]">
-              For CDAOs, Data Directors, Risk, Compliance, and Audit leaders —
-              thirty focused minutes. No pitch deck theatre. Just a clear read
-              on where trust is failing in your data foundation.
+              From CDOs to Data directors. COOs to Programme managers. Risk and
+              compliance to Audit leaders. Thirty focused minutes. No pitch deck
+              theatre. Just a clear read on where trust is failing in your data
+              foundation.
             </p>
             <p className="mt-5 text-[14px] text-[var(--color-ink)]/85">
-              Vijay Kanojia — Founder &amp; Principal Consultant
+              Vijay Kanojia, Founder &amp; Principal Consultant
               <br />
               <span className="text-[var(--color-muted)]">
-                18+ years in financial services data transformation
+                18+ years in financial services data transformation. Based in
+                London.
               </span>
             </p>
           </div>

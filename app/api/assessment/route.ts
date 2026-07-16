@@ -30,14 +30,14 @@ export async function POST(request: Request) {
     });
 
     await sendLeadEmail({
-      subject: `New Senior Data Assessment Request — ${fullName}`,
+      subject: `New Senior Data Assessment Request: ${fullName}`,
       replyTo: workEmail,
       html,
     });
 
     try {
       const { html: confirmationHtml } = renderMessageEmail({
-        heading: `Thanks, ${fullName} — we've got your request`,
+        heading: `Thanks, ${fullName}. We've got your request`,
         paragraphs: [
           `Thank you for requesting a Senior Data Assessment from AugmentFirst.`,
           `Augment First team will review what you've shared and be in touch shortly with next steps.`,

@@ -104,7 +104,7 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
           Request your Senior Data Assessment
         </h2>
         <p className="mt-2 text-[13.5px] leading-relaxed text-[var(--color-muted)]">
-          Thirty minutes of senior attention on what&apos;s actually broken —
+          Thirty minutes of senior attention on what&apos;s actually broken,
           before you buy another tool.
         </p>
         <div className="mt-4 h-px w-12 bg-[var(--color-brass)]" />

@@ -12,7 +12,7 @@ export function VideoSection() {
           How we actually approach this
         </h2>
         <p className="mx-auto mt-3 max-w-md text-[15px] text-[var(--color-muted)]">
-          Ninety seconds on fixing trust at the source — not decorating the
+          Ninety seconds on fixing trust at the source, not decorating the
           symptoms.
         </p>
 

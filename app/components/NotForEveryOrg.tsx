@@ -9,7 +9,7 @@ export function NotForEveryOrg() {
         <p className="mt-5 text-[15.5px] leading-relaxed text-[var(--color-muted)]">
           Built for banks, fintechs, and regulated firms where a board,
           regulator, or investor is asking questions your data can&apos;t fully
-          answer — and where senior ownership of the fix still matters.
+          answer, and where senior ownership of the fix still matters.
         </p>
       </div>
     </section>

@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     });
 
     await sendLeadEmail({
-      subject: `New Strategy Call Booking — ${fullName}`,
+      subject: `New Strategy Call Booking: ${fullName}`,
       replyTo: email,
       html,
     });

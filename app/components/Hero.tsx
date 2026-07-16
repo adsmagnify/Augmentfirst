@@ -25,7 +25,7 @@ export function Hero() {
         <div className="animate-line mx-auto mt-8 h-px w-20 bg-[var(--color-brass)]" />
 
         <p className="animate-rise-delay-1 mx-auto mt-7 max-w-xl text-[17px] leading-relaxed text-[var(--color-muted)] sm:text-[18px]">
-          That silence is not a reporting problem. It is a trust problem — and
+          That silence is not a reporting problem. It is a trust problem, and
           it usually starts deeper than any dashboard can reach.
         </p>
 

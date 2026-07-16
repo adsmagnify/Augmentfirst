@@ -10,12 +10,12 @@ export function PainSection() {
           Finance has one figure. Risk has another. Operations has a third. The
           audit trail goes cold somewhere between a spreadsheet and a source
           system. Staff stay late reconciling what should have been trusted in
-          the first place — while the next board pack, regulator ask, or
+          the first place, while the next board pack, regulator ask, or
           investor diligence sits on the calendar.
         </p>
         <p className="mt-5 text-[16px] leading-[1.75] text-[var(--color-ink)]/90 sm:text-[17px]">
           The cost is not just inefficiency. It is the quiet erosion of
-          confidence — in your numbers, your controls, and the room you walk
+          confidence in your numbers, your controls, and the room you walk
           into.
         </p>
       </div>
