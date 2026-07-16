@@ -7,9 +7,8 @@ export function NotForEveryOrg() {
         </h2>
         <div className="mx-auto mt-4 h-px w-14 bg-[var(--color-brass)]/70" />
         <p className="mt-5 text-[15.5px] leading-relaxed text-[var(--color-muted)]">
-          Built for banks, fintechs, and regulated firms where a board,
-          regulator, or investor is asking questions your data can&apos;t fully
-          answer, and where senior ownership of the fix still matters.
+         Built for financial services and regulated firms where a board, regulator,
+          or investor is asking questions your data can't fully answer.
         </p>
       </div>
     </section>

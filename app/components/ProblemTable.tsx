@@ -2,7 +2,7 @@ const ROWS = [
   {
     icon: "stack",
     problem: "Data is missing, duplicated, or inconsistent",
-    change: "Trace the break to its source and fix it there, not in another layer on top.",
+    change: "Trace the break to its source, fix the gaps and prevent adding another layer.",
   },
   {
     icon: "search",
