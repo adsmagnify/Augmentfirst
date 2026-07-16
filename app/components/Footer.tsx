@@ -18,8 +18,8 @@ export function Footer() {
               <Logo />
             </div>
             <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-[var(--color-muted)]">
-              Senior-led data foundation work for banks, fintechs, and regulated
-              firms. Fixing trust at the source.
+              Senior-led data foundation work for banks, financial services, fintechs, and regulated firms. 
+              Fixing trust at the source
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export function Footer() {
                 href="tel:+4407784419117"
                 className="block font-medium text-[var(--color-ink)] transition hover:text-[var(--color-brass)]"
               >
-                +44 07784419117
+                +44 7784419117
               </a>
               <a
                 href="mailto:Vijay.Kanojia@augmentfirst.com"
