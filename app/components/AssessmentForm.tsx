@@ -86,8 +86,8 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
       id="assessment-form"
       className={
         compact
-          ? "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7"
-          : "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-7 sm:p-9"
+          ? "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-4 sm:p-7"
+          : "border border-[var(--color-hairline)] bg-[var(--color-panel)] p-5 sm:p-9"
       }
     >
       <div className="text-left">
@@ -97,8 +97,8 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
         <h2
           className={
             compact
-              ? "mt-2 font-serif text-[22px] leading-tight text-[var(--color-ink)]"
-              : "mt-2 font-serif text-[26px] leading-tight text-[var(--color-ink)] sm:text-[28px]"
+              ? "mt-2 font-serif text-[20px] leading-tight text-[var(--color-ink)] sm:text-[22px]"
+              : "mt-2 font-serif text-[24px] leading-tight text-[var(--color-ink)] sm:text-[28px]"
           }
         >
           Request your Senior Data Assessment

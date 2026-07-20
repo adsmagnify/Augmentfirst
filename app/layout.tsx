@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Libre_Baskerville, Plus_Jakarta_Sans } from "next/font/google";
 import { FloatingCta } from "./components/FloatingCta";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/app/lib/site";
@@ -18,6 +18,12 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const siteUrl = getSiteUrl();
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#080b12",
+};
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {

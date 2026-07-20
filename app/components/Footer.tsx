@@ -10,8 +10,8 @@ const COMPANY_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-[var(--color-hairline)] bg-[#06080e] pt-14">
-      <div className="mx-auto max-w-[1120px] px-6">
+    <footer className="border-t border-[var(--color-hairline)] bg-[#06080e] pt-12 sm:pt-14">
+      <div className="mx-auto max-w-[1120px] px-4 sm:px-6">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <div className="inline-flex rounded-md bg-white px-3 py-2">
@@ -59,7 +59,7 @@ export function Footer() {
               </a>
               <a
                 href="mailto:Vijay.Kanojia@augmentfirst.com"
-                className="block transition hover:text-[var(--color-brass)]"
+                className="block break-all transition hover:text-[var(--color-brass)]"
               >
                 Vijay.Kanojia@augmentfirst.com
               </a>

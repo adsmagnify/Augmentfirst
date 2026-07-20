@@ -6,8 +6,8 @@ export function VideoSection() {
   const [playing, setPlaying] = useState(false);
 
   return (
-    <section className="py-16 sm:py-20">
-      <div className="mx-auto max-w-[800px] px-6 text-center">
+    <section className="py-12 sm:py-20">
+      <div className="mx-auto max-w-[800px] px-4 text-center sm:px-6">
         <h2 className="font-serif text-[clamp(1.45rem,3vw,1.95rem)] text-[var(--color-ink)]">
           How we actually approach this
         </h2>

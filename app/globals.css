@@ -29,11 +29,18 @@
   --font-sans: var(--font-body);
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-sans), ui-sans-serif, sans-serif;
   color: var(--color-ink);
   background: var(--color-bg);
   scroll-behavior: smooth;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .font-serif {
@@ -220,11 +227,12 @@ select.input option {
   gap: 0.5rem;
   border-radius: 0.5rem;
   background: var(--color-brass);
-  padding: 0.875rem 1.5rem;
+  padding: 0.875rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #0a0c10;
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
 }
 
 .btn-primary:hover {
@@ -242,11 +250,24 @@ select.input option {
   border-radius: 0.5rem;
   border: 1px solid rgba(201, 162, 39, 0.45);
   background: transparent;
-  padding: 0.875rem 1.5rem;
+  padding: 0.875rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-ink);
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  touch-action: manipulation;
+}
+
+@media (max-width: 639px) {
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .input {
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
 }
 
 .btn-secondary:hover {

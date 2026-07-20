@@ -1,6 +1,6 @@
 /**
  * Canonical site origin used for sitemap, robots, and metadata.
- * Set NEXT_PUBLIC_SITE_URL in Vercel (e.g. https://augmentfirst.com).
+ * Set NEXT_PUBLIC_SITE_URL in Vercel (e.g. https://lp.augmentfirst.com).
  */
 export function getSiteUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -14,7 +14,7 @@ export function getSiteUrl(): string {
     return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
   }
 
-  return "https://augmentfirst.com";
+  return "https://lp.augmentfirst.com";
 }
 
 export const SITE_NAME = "AugmentFirst";

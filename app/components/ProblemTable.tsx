@@ -87,7 +87,7 @@ export function ProblemTable() {
         {ROWS.map((row) => (
           <li
             key={row.problem}
-            className="group grid gap-2 border-b border-[var(--color-hairline)] py-5 transition sm:grid-cols-[1fr_1fr] sm:gap-8"
+            className="group grid gap-2 border-b border-[var(--color-hairline)] py-4 transition sm:grid-cols-[1fr_1fr] sm:gap-8 sm:py-5"
           >
             <div className="flex items-start gap-3">
               <span className="mt-0.5 shrink-0 opacity-80 transition group-hover:opacity-100">

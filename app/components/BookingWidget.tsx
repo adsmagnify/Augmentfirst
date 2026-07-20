@@ -206,10 +206,10 @@ export function BookingWidget({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 ${className}`}
+      className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-4 sm:p-7 ${className}`}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h3 className="font-serif text-[17px] text-[var(--color-ink)]">
+        <h3 className="font-serif text-[16px] text-[var(--color-ink)] sm:text-[17px]">
           Select a Date &amp; Time
         </h3>
         <span className="text-[12.5px] text-[var(--color-muted)]">
@@ -217,31 +217,33 @@ export function BookingWidget({ className = "" }: { className?: string }) {
         </span>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-[1.35fr_1fr]">
-        <div>
-          <div className="flex items-center justify-between">
+      <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-[1.35fr_1fr] sm:gap-6">
+        <div className="min-w-0">
+          <div className="flex items-center justify-between gap-2">
             <button
+              type="button"
               aria-label="Previous month"
               onClick={() => goToMonth(-1)}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-ink)] hover:bg-[var(--color-panel-soft)]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-ink)] hover:bg-[var(--color-panel-soft)]"
             >
               ‹
             </button>
-            <span className="text-[14px] font-semibold text-[var(--color-ink)]">
+            <span className="text-[13px] font-semibold text-[var(--color-ink)] sm:text-[14px]">
               {monthLabel}
             </span>
             <button
+              type="button"
               aria-label="Next month"
               onClick={() => goToMonth(1)}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-ink)] hover:bg-[var(--color-panel-soft)]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-ink)] hover:bg-[var(--color-panel-soft)]"
             >
               ›
             </button>
           </div>
 
-          <div className="mt-4 grid grid-cols-7 gap-y-2 text-center">
+          <div className="mt-4 grid grid-cols-7 gap-x-0.5 gap-y-1.5 text-center sm:gap-y-2">
             {DAY_LABELS.map((d) => (
-              <span key={d} className="text-[10.5px] font-semibold text-[var(--color-muted)]">
+              <span key={d} className="text-[10px] font-semibold text-[var(--color-muted)] sm:text-[10.5px]">
                 {d}
               </span>
             ))}
@@ -253,6 +255,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
               const isToday = isSameDay(date, today);
               return (
                 <button
+                  type="button"
                   key={i}
                   disabled={disabled}
                   onClick={() => {
@@ -260,7 +263,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
                     setSelectedTime(null);
                   }}
                   className={[
-                    "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-[13px] transition duration-200",
+                    "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-[12.5px] transition duration-200 sm:text-[13px]",
                     disabled
                       ? "cursor-not-allowed text-white/20"
                       : selected
@@ -277,9 +280,10 @@ export function BookingWidget({ className = "" }: { className?: string }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 sm:border-l sm:border-white/10 sm:pl-6 max-h-[240px] overflow-y-auto custom-scrollbar">
+        <div className="flex max-h-[200px] flex-col gap-2 overflow-y-auto custom-scrollbar sm:max-h-[240px] sm:border-l sm:border-white/10 sm:pl-6">
           {TIME_SLOTS.map((t) => (
             <button
+              type="button"
               key={t}
               onClick={() => setSelectedTime(t)}
               className={[
@@ -296,9 +300,10 @@ export function BookingWidget({ className = "" }: { className?: string }) {
       </div>
 
       {selectedDate && selectedTime && (
-        <button 
+        <button
+          type="button"
           onClick={() => setShowForm(true)}
-          className="btn-primary mt-6 w-full cursor-pointer"
+          className="btn-primary mt-5 w-full cursor-pointer sm:mt-6"
         >
           Confirm {selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}{" "}
           at {selectedTime}
