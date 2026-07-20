@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 const TIME_SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "3:30 PM", "5:00 PM"];
@@ -29,6 +30,7 @@ function isSameDay(a: Date | null, b: Date | null) {
 }
 
 export function BookingWidget({ className = "" }: { className?: string }) {
+  const router = useRouter();
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState<Date | null>(today);
@@ -36,7 +38,6 @@ export function BookingWidget({ className = "" }: { className?: string }) {
 
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -89,37 +90,12 @@ export function BookingWidget({ className = "" }: { className?: string }) {
 
       if (!res.ok) throw new Error("Request failed");
 
-      setSubmitting(false);
-      setSubmitted(true);
+      router.push("/thank-you?from=booking");
     } catch (err) {
       console.error(err);
       setSubmitting(false);
       setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 text-center rounded-2xl ${className}`}>
-        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brass)]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path
-              d="M5 13l4 4L19 7"
-              stroke="#0a0c10"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-        <h3 className="font-serif text-xl text-[var(--color-ink)]">
-          Strategy Call Requested
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-          We have received your request. Augment First team will be in touch at <strong>{email}</strong> to confirm your slot on <strong>{selectedDate?.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} at {selectedTime}</strong>.
-        </p>
-      </div>
-    );
   }
 
   if (showForm) {

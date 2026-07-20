@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 const SITUATIONS = [
   "We can't trace a figure back to its source",
@@ -26,7 +27,7 @@ const DRIVERS = [
 ];
 
 export function AssessmentForm({ compact = false }: { compact?: boolean }) {
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,38 +48,12 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
 
       if (!res.ok) throw new Error("Request failed");
 
-      setSubmitting(false);
-      setSubmitted(true);
+      router.push("/thank-you?from=assessment");
     } catch (err) {
       console.error(err);
       setSubmitting(false);
       setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className="border border-[var(--color-hairline)] bg-[var(--color-panel)] p-8 text-center sm:p-10">
-        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brass)]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path
-              d="M5 13l4 4L19 7"
-              stroke="#0a0c10"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-        <h3 className="font-serif text-xl text-[var(--color-ink)]">
-          We&apos;ve got your request
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-          Augment First team will be in touch shortly with next steps for your
-          senior data assessment.
-        </p>
-      </div>
-    );
   }
 
   return (
