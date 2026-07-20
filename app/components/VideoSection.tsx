@@ -1,9 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function VideoSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+
+  async function handlePlay() {
+    const video = videoRef.current;
+    if (!video) return;
+    try {
+      setPlaying(true);
+      await video.play();
+    } catch {
+      setPlaying(false);
+    }
+  }
+
+  function handlePause() {
+    setPlaying(false);
+  }
+
+  function handleEnded() {
+    setPlaying(false);
+  }
 
   return (
     <section className="py-12 sm:py-20">
@@ -16,43 +36,37 @@ export function VideoSection() {
           symptoms.
         </p>
 
-        <div
-          className="relative mx-auto mt-10 aspect-video w-full overflow-hidden border border-[var(--color-hairline)]"
-          style={{
-            background:
-              "linear-gradient(145deg, #151b26 0%, #080b12 55%, #121018 100%)",
-          }}
-        >
-          {playing ? (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-[var(--color-muted)] animate-slide-up">
-              <span className="text-sm">
-                Drop your video file in and wire this player up to it.
-              </span>
-              <button
-                onClick={() => setPlaying(false)}
-                className="btn-secondary !py-2 !px-4 text-sm"
-              >
-                Back to preview
-              </button>
-            </div>
-          ) : (
+        <div className="relative mx-auto mt-10 aspect-video w-full overflow-hidden border border-[var(--color-hairline)] bg-[#0a0c10]">
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover"
+            src="/vijay_video.mp4"
+            playsInline
+            preload="metadata"
+            controls={playing}
+            onPause={handlePause}
+            onEnded={handleEnded}
+            onPlay={() => setPlaying(true)}
+          />
+
+          {!playing && (
             <button
-              onClick={() => setPlaying(true)}
+              type="button"
+              onClick={handlePlay}
               aria-label="Play video"
-              className="absolute inset-0 flex items-center justify-center bg-black/25 transition hover:bg-black/35"
+              className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-t from-black/55 via-black/25 to-black/20 transition hover:from-black/60 hover:via-black/35 hover:to-black/25 cursor-pointer"
             >
-              <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-ink)] text-[#0a0c10] shadow-lg transition hover:scale-105">
-                <span className="absolute inset-0 rounded-full bg-[var(--color-brass)]/25 animate-pulse-gentle" />
-                <svg
-                  className="relative ml-1"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+              <span className="relative block h-[72px] w-[72px] transition duration-300 hover:scale-105 sm:h-20 sm:w-20">
+                <span className="absolute inset-[-10%] rounded-full bg-[var(--color-brass)]/25 blur-lg animate-pulse-gentle" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/play-button.svg"
+                  alt=""
+                  width={160}
+                  height={160}
+                  className="relative h-full w-full object-contain"
+                  draggable={false}
+                />
               </span>
             </button>
           )}
