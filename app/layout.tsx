@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Libre_Baskerville, Plus_Jakarta_Sans } from "next/font/google";
 import { FloatingCta } from "./components/FloatingCta";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/app/lib/site";
 import "./globals.css";
+
+const GTM_ID = "GTM-KQP7TD6R";
 
 const libreBaskerville = Libre_Baskerville({
   variable: "--font-display",
@@ -113,6 +116,22 @@ export default function RootLayout({
       className={`${libreBaskerville.variable} ${plusJakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--color-bg)] text-[var(--color-ink)]">
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
+          />
+        </noscript>
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
