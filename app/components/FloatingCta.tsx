@@ -9,7 +9,7 @@ export function FloatingCta() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  if (pathname?.startsWith("/thank-you")) return null;
+  if (pathname?.startsWith("/thank-you") || pathname?.startsWith("/booking/")) return null;
 
   return (
     <div className="fixed bottom-3 right-3 z-50 sm:bottom-6 sm:right-6 pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)]">

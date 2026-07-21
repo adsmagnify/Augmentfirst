@@ -7,7 +7,7 @@ export function Header() {
         <Logo />
         <div className="flex shrink-0 items-center gap-2 sm:gap-6">
           <a
-            href="tel:+4407784419117"
+            href="tel:+44 7784419117"
             className="flex h-10 w-10 items-center justify-center rounded-md text-[#16233f] transition hover:text-[var(--color-brass)] sm:hidden"
             aria-label="Call Vijay Kanojia"
           >
@@ -21,7 +21,7 @@ export function Header() {
             </svg>
           </a>
           <a
-            href="tel:+4407784419117"
+            href="tel:+44 7784419117"
             className="hidden items-center gap-2 text-[13.5px] font-semibold text-[#16233f] transition hover:text-[var(--color-brass)] sm:flex"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -32,7 +32,7 @@ export function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            +44 07784419117
+            +44 7784419117
           </a>
           <a
             href="#assessment"

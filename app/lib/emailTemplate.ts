@@ -4,10 +4,12 @@ export function renderLeadEmail({
   heading,
   intro,
   rows,
+  cta,
 }: {
   heading: string;
   intro: string;
   rows: { label: string; value: string }[];
+  cta?: { label: string; url: string };
 }) {
   const tableRows = rows
     .map(
@@ -18,6 +20,19 @@ export function renderLeadEmail({
         </tr>`
     )
     .join("");
+
+  const ctaHtml = cta
+    ? `
+      <div style="margin-top:24px;text-align:center;">
+        <a href="${escapeHtml(cta.url)}" style="display:inline-block;background:#c9a227;color:#0a0c10;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:6px;">
+          ${escapeHtml(cta.label)}
+        </a>
+        <p style="margin:12px 0 0;font-size:12px;color:#888;line-height:1.5;">
+          Or copy this link:<br/>
+          <a href="${escapeHtml(cta.url)}" style="color:#555;word-break:break-all;">${escapeHtml(cta.url)}</a>
+        </p>
+      </div>`
+    : "";
 
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;padding:32px 16px;">
@@ -31,6 +46,7 @@ export function renderLeadEmail({
           <table style="width:100%;border-collapse:collapse;">
             ${tableRows}
           </table>
+          ${ctaHtml}
         </div>
       </div>
     </div>

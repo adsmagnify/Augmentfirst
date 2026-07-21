@@ -1,10 +1,24 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-const TIME_SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "3:30 PM", "5:00 PM"];
+// Hourly slots, 8:00 AM – 7:00 PM UK time (weekdays only)
+const TIME_SLOTS = [
+  "8:00 AM",
+  "9:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "1:00 PM",
+  "2:00 PM",
+  "3:00 PM",
+  "4:00 PM",
+  "5:00 PM",
+  "6:00 PM",
+  "7:00 PM",
+];
 
 function buildMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
@@ -29,12 +43,36 @@ function isSameDay(a: Date | null, b: Date | null) {
   );
 }
 
+function isWeekend(date: Date) {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+}
+
+function nextWeekday(from: Date) {
+  const d = new Date(from);
+  d.setHours(0, 0, 0, 0);
+  while (isWeekend(d)) {
+    d.setDate(d.getDate() + 1);
+  }
+  return d;
+}
+
+function toDateKey(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+type UnavailableSlot = { dateKey: string; time: string };
+
 export function BookingWidget({ className = "" }: { className?: string }) {
   const router = useRouter();
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
-  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => nextWeekday(today));
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [unavailable, setUnavailable] = useState<UnavailableSlot[]>([]);
 
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -53,6 +91,48 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     year: "numeric",
   });
 
+  const selectedDateKey = selectedDate ? toDateKey(selectedDate) : null;
+
+  const takenTimesForDay = useMemo(() => {
+    if (!selectedDateKey) return new Set<string>();
+    return new Set(
+      unavailable.filter((s) => s.dateKey === selectedDateKey).map((s) => s.time)
+    );
+  }, [unavailable, selectedDateKey]);
+
+  const availableTimes = useMemo(
+    () => TIME_SLOTS.filter((t) => !takenTimesForDay.has(t)),
+    [takenTimesForDay]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSlots() {
+      try {
+        const res = await fetch("/api/booking/slots", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as { slots?: UnavailableSlot[] };
+        if (!cancelled && Array.isArray(data.slots)) {
+          setUnavailable(data.slots);
+        }
+      } catch (err) {
+        console.error("Failed to load unavailable slots:", err);
+      }
+    }
+
+    loadSlots();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedTime && takenTimesForDay.has(selectedTime)) {
+      setSelectedTime(null);
+    }
+  }, [selectedTime, takenTimesForDay]);
+
   function goToMonth(delta: number) {
     setCursor((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
   }
@@ -63,16 +143,23 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     return d < new Date(new Date().setHours(0, 0, 0, 0));
   }
 
+  function isUnavailable(date: Date) {
+    return isPast(date) || isWeekend(date);
+  }
+
   async function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!selectedDate || !selectedTime) return;
+
     setSubmitting(true);
     setError(null);
 
-    const formattedDate = selectedDate?.toLocaleDateString("en-US", {
+    const dateKey = toDateKey(selectedDate);
+    const formattedDate = selectedDate.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
-      day: "numeric"
+      day: "numeric",
     });
 
     try {
@@ -83,18 +170,31 @@ export function BookingWidget({ className = "" }: { className?: string }) {
           fullName,
           email,
           company,
+          dateKey,
           requestedDate: formattedDate,
           requestedTime: selectedTime,
         }),
       });
 
-      if (!res.ok) throw new Error("Request failed");
+      const payload = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        details?: string;
+      };
+
+      if (!res.ok) {
+        const msg = [payload.error, payload.details].filter(Boolean).join(" — ");
+        throw new Error(msg || "Request failed");
+      }
 
       router.push("/thank-you?from=booking");
     } catch (err) {
       console.error(err);
       setSubmitting(false);
-      setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "Something went wrong sending your request. Please try again, or email Vijay directly."
+      );
     }
   }
 
@@ -102,7 +202,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     return (
       <div className={`border border-[var(--color-hairline)] bg-[var(--color-panel)] p-6 sm:p-7 rounded-2xl ${className}`}>
         <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-5">
-          <button 
+          <button
             type="button"
             onClick={() => setShowForm(false)}
             className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10 text-white/70 hover:text-white cursor-pointer"
@@ -189,7 +289,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
           Select a Date &amp; Time
         </h3>
         <span className="text-[12.5px] text-[var(--color-muted)]">
-          UK Time (GMT/BST)
+          UK Time (GMT/BST) · Weekdays 8:00 AM – 7:00 PM
         </span>
       </div>
 
@@ -226,7 +326,7 @@ export function BookingWidget({ className = "" }: { className?: string }) {
 
             {cells.map((date, i) => {
               if (!date) return <span key={i} />;
-              const disabled = isPast(date);
+              const disabled = isUnavailable(date);
               const selected = isSameDay(date, selectedDate);
               const isToday = isSameDay(date, today);
               return (
@@ -256,22 +356,28 @@ export function BookingWidget({ className = "" }: { className?: string }) {
           </div>
         </div>
 
-        <div className="flex max-h-[200px] flex-col gap-2 overflow-y-auto custom-scrollbar sm:max-h-[240px] sm:border-l sm:border-white/10 sm:pl-6">
-          {TIME_SLOTS.map((t) => (
-            <button
-              type="button"
-              key={t}
-              onClick={() => setSelectedTime(t)}
-              className={[
-                "rounded-xl border py-2.5 text-[13.5px] font-medium transition duration-200",
-                selectedTime === t
-                  ? "border-[var(--color-brass)] bg-[var(--color-brass)] text-[#0a0c10]"
-                  : "border-white/10 bg-white/[0.02] text-[var(--color-ink)] hover:border-[var(--color-brass)] hover:bg-white/[0.05]",
-              ].join(" ")}
-            >
-              {t}
-            </button>
-          ))}
+        <div className="flex max-h-[240px] flex-col gap-2 overflow-y-auto custom-scrollbar sm:max-h-[280px] sm:border-l sm:border-white/10 sm:pl-6">
+          {availableTimes.length === 0 ? (
+            <p className="py-4 text-center text-[13px] text-[var(--color-muted)]">
+              No open slots for this day. Please choose another weekday.
+            </p>
+          ) : (
+            availableTimes.map((t) => (
+              <button
+                type="button"
+                key={t}
+                onClick={() => setSelectedTime(t)}
+                className={[
+                  "rounded-xl border py-2.5 text-[13.5px] font-medium transition duration-200",
+                  selectedTime === t
+                    ? "border-[var(--color-brass)] bg-[var(--color-brass)] text-[#0a0c10]"
+                    : "border-white/10 bg-white/[0.02] text-[var(--color-ink)] hover:border-[var(--color-brass)] hover:bg-white/[0.05]",
+                ].join(" ")}
+              >
+                {t}
+              </button>
+            ))
+          )}
         </div>
       </div>
 

@@ -52,7 +52,7 @@ export function Footer() {
                 EC1V 2NX, United Kingdom
               </p>
               <a
-                href="tel:+4407784419117"
+                href="tel:+44 7784419117"
                 className="block font-medium text-[var(--color-ink)] transition hover:text-[var(--color-brass)]"
               >
                 +44 7784419117
