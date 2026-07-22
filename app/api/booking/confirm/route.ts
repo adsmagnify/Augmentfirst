@@ -6,8 +6,12 @@ import { getSiteUrl } from "@/app/lib/site";
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const token = url.searchParams.get("token") ?? "";
-  const status = await processBookingConfirm(token);
+  const result = await processBookingConfirm(token);
+
+  const qs = new URLSearchParams({ status: result.status });
+  if (result.bookingId) qs.set("id", result.bookingId);
+
   return NextResponse.redirect(
-    `${getSiteUrl()}/booking/confirm-result?status=${status}`
+    `${getSiteUrl()}/booking/confirm-result?${qs.toString()}`
   );
 }

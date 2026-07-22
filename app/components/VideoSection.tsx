@@ -2,6 +2,9 @@
 
 import { useRef, useState } from "react";
 
+const THUMBNAIL = "/Vijay_VSL_Thumbnail.png";
+const VIDEO_SRC = "/vijay_video.mp4";
+
 export function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -18,11 +21,14 @@ export function VideoSection() {
   }
 
   function handlePause() {
+    if (videoRef.current?.ended) return;
     setPlaying(false);
   }
 
   function handleEnded() {
     setPlaying(false);
+    const video = videoRef.current;
+    if (video) video.currentTime = 0;
   }
 
   return (
@@ -40,9 +46,10 @@ export function VideoSection() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
-            src="/vijay_video.mp4"
+            src={VIDEO_SRC}
+            poster={THUMBNAIL}
             playsInline
-            preload="metadata"
+            preload="none"
             controls={playing}
             onPause={handlePause}
             onEnded={handleEnded}
@@ -54,20 +61,15 @@ export function VideoSection() {
               type="button"
               onClick={handlePlay}
               aria-label="Play video"
-              className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-t from-black/55 via-black/25 to-black/20 transition hover:from-black/60 hover:via-black/35 hover:to-black/25 cursor-pointer"
+              className="absolute inset-0 z-10 cursor-pointer"
             >
-              <span className="relative block h-[72px] w-[72px] transition duration-300 hover:scale-105 sm:h-20 sm:w-20">
-                <span className="absolute inset-[-10%] rounded-full bg-[var(--color-brass)]/25 blur-lg animate-pulse-gentle" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/play-button.svg"
-                  alt=""
-                  width={160}
-                  height={160}
-                  className="relative h-full w-full object-contain"
-                  draggable={false}
-                />
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={THUMBNAIL}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
+                draggable={false}
+              />
             </button>
           )}
         </div>

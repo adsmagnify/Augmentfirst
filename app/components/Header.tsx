@@ -1,4 +1,5 @@
 import { Logo } from "./Logo";
+import { PHONE_DISPLAY, PHONE_E164 } from "@/app/lib/contact";
 
 export function Header() {
   return (
@@ -7,9 +8,9 @@ export function Header() {
         <Logo />
         <div className="flex shrink-0 items-center gap-2 sm:gap-6">
           <a
-            href="tel:+44 7784419117"
+            href={`tel:${PHONE_E164}`}
             className="flex h-10 w-10 items-center justify-center rounded-md text-[#16233f] transition hover:text-[var(--color-brass)] sm:hidden"
-            aria-label="Call Vijay Kanojia"
+            aria-label={`Call Vijay Kanojia at ${PHONE_DISPLAY}`}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -21,7 +22,7 @@ export function Header() {
             </svg>
           </a>
           <a
-            href="tel:+44 7784419117"
+            href={`tel:${PHONE_E164}`}
             className="hidden items-center gap-2 text-[13.5px] font-semibold text-[#16233f] transition hover:text-[var(--color-brass)] sm:flex"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -32,10 +33,10 @@ export function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            +44 7784419117
+            {PHONE_DISPLAY}
           </a>
           <a
-            href="#assessment"
+            href="/#assessment"
             className="rounded-md bg-[var(--color-brass)] px-3 py-2 text-[12px] font-semibold text-[#0a0c10] transition hover:bg-[var(--color-brass-deep)] sm:px-4 sm:py-2.5 sm:text-[13px]"
           >
             <span className="sm:hidden">Assessment</span>

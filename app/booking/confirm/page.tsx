@@ -14,6 +14,10 @@ type PageProps = {
 export default async function BookingConfirmPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const token = params.token ?? "";
-  const status = await processBookingConfirm(token);
-  redirect(`/booking/confirm-result?status=${status}`);
+  const result = await processBookingConfirm(token);
+
+  const qs = new URLSearchParams({ status: result.status });
+  if (result.bookingId) qs.set("id", result.bookingId);
+
+  redirect(`/booking/confirm-result?${qs.toString()}`);
 }

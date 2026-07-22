@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
+import { getBooking } from "@/app/lib/bookings";
 
 export const metadata: Metadata = {
   title: "Booking confirmation",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; id?: string }>;
 };
 
 const COPY: Record<
@@ -18,12 +19,12 @@ const COPY: Record<
 > = {
   confirmed: {
     title: "Slot confirmed",
-    body: "The strategy call is confirmed. A confirmation email has been sent to the requester.",
+    body: "The strategy call is confirmed. A confirmation email with a unique Zoom link has been sent to the requester, and the event is on the Microsoft 365 calendar.",
     tone: "ok",
   },
   already: {
     title: "Already confirmed",
-    body: "This booking was already confirmed. No further action is needed.",
+    body: "This booking was already confirmed. Meeting details are shown below if available.",
     tone: "ok",
   },
   expired: {
@@ -53,6 +54,13 @@ export default async function BookingConfirmResultPage({ searchParams }: PagePro
   const status = params.status && COPY[params.status] ? params.status : "error";
   const copy = COPY[status];
 
+  const booking =
+    params.id && (status === "confirmed" || status === "already")
+      ? await getBooking(params.id)
+      : null;
+
+  const meetingUrl = booking?.meetingUrl ?? null;
+
   return (
     <div className="page-atmosphere flex min-h-screen flex-col">
       <Header />
@@ -68,6 +76,62 @@ export default async function BookingConfirmResultPage({ searchParams }: PagePro
           <p className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-[var(--color-muted)]">
             {copy.body}
           </p>
+
+          {booking && (
+            <div className="mx-auto mt-8 max-w-md rounded-xl border border-[var(--color-hairline)] bg-[var(--color-panel)] p-5 text-left">
+              <p className="text-[13px] text-[var(--color-muted)]">Guest</p>
+              <p className="mt-1 text-[14px] text-[var(--color-ink)]">
+                {booking.fullName}
+                {booking.company ? ` · ${booking.company}` : ""}
+              </p>
+              <p className="mt-4 text-[13px] text-[var(--color-muted)]">Slot</p>
+              <p className="mt-1 text-[14px] text-[var(--color-ink)]">
+                {booking.displayDate} at {booking.time} (UK)
+              </p>
+              {meetingUrl && (
+                <>
+                  <p className="mt-4 text-[13px] text-[var(--color-muted)]">Zoom</p>
+                  <a
+                    href={meetingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex w-full items-center justify-center rounded-md bg-[#2D8CFF] px-4 py-3 text-[14px] font-semibold text-white transition hover:brightness-110"
+                  >
+                    Open Zoom meeting
+                  </a>
+                  <p className="mt-2 break-all text-[11px] text-[var(--color-muted)]">
+                    {meetingUrl}
+                  </p>
+                </>
+              )}
+              {!meetingUrl && (status === "confirmed" || status === "already") && (
+                <div className="mt-4 space-y-3 text-left text-[13px] leading-relaxed text-[var(--color-muted)]">
+                  <p>
+                    No Zoom link yet. On localhost, set Zoom vars in{" "}
+                    <code className="text-[12px]">.env.local</code> (not Vercel),
+                    add meeting write scopes on the Zoom app, activate it, restart{" "}
+                    <code className="text-[12px]">npm run dev</code>, then open this
+                    confirm link again.
+                  </p>
+                  <p>
+                    Required:{" "}
+                    <code className="text-[12px]">ZOOM_ACCOUNT_ID</code>,{" "}
+                    <code className="text-[12px]">ZOOM_CLIENT_ID</code>,{" "}
+                    <code className="text-[12px]">ZOOM_CLIENT_SECRET</code>,{" "}
+                    <code className="text-[12px]">ZOOM_HOST_EMAIL</code>. Scopes:{" "}
+                    <code className="text-[12px]">meeting:write:meeting</code> and{" "}
+                    <code className="text-[12px]">meeting:write:meeting:admin</code>.
+                  </p>
+                  {booking.meetingSetupError && (
+                    <p className="break-words rounded-md border border-[var(--color-hairline)] bg-[var(--color-canvas)] p-3 text-[12px] text-[var(--color-ink)]">
+                      {booking.meetingSetupError}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <Link
             href="/"
             className="mt-10 inline-block text-[14px] text-[var(--color-muted)] transition hover:text-[var(--color-brass)]"

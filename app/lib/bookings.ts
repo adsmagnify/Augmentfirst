@@ -22,6 +22,9 @@ export type Booking = {
   status: BookingStatus;
   createdAt: number;
   confirmedAt?: number;
+  meetingUrl?: string | null;
+  calendarEventId?: string | null;
+  meetingSetupError?: string | null;
 };
 
 export type UnavailableSlot = { dateKey: string; time: string };
@@ -144,6 +147,30 @@ export async function confirmBooking(id: string): Promise<
   await kv.set(slotKey(booking.dateKey, booking.time), id);
 
   return { ok: true, booking: confirmed };
+}
+
+export async function updateBookingMeeting(
+  id: string,
+  meeting: {
+    meetingUrl: string | null;
+    calendarEventId: string | null;
+    meetingSetupError?: string | null;
+  }
+): Promise<Booking | null> {
+  const booking = await getBooking(id);
+  if (!booking) return null;
+
+  const updated: Booking = {
+    ...booking,
+    meetingUrl: meeting.meetingUrl,
+    calendarEventId: meeting.calendarEventId,
+    meetingSetupError:
+      meeting.meetingSetupError === undefined
+        ? booking.meetingSetupError
+        : meeting.meetingSetupError,
+  };
+  await kv.set(bookingKey(id), updated);
+  return updated;
 }
 
 export async function listUnavailableSlots(): Promise<UnavailableSlot[]> {
