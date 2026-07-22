@@ -2,34 +2,21 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-
-const SITUATIONS = [
-  "We can't trace a figure back to its source",
-  "Different teams report different numbers",
-  "An audit or regulator flagged our data",
-  "Staff spend too long manually reconciling data",
-  "Something else",
-];
-
-const COMPANY_SIZES = [
-  "Under 200 employees",
-  "200–1,000 employees",
-  "1,000–5,000 employees",
-  "5,000+ employees",
-];
-
-const DRIVERS = [
-  "Board or investor request",
-  "Upcoming audit or regulatory review",
-  "New risk or compliance requirement",
-  "Ongoing operational pain",
-  "Other",
-];
+import {
+  ASSESSMENT_COMPANY_SIZES,
+  ASSESSMENT_DRIVERS,
+  ASSESSMENT_SITUATIONS,
+  firstAssessmentError,
+  normalizeAssessmentInput,
+  validateAssessment,
+  type AssessmentFieldErrors,
+} from "@/app/lib/assessmentValidation";
 
 export function AssessmentForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<AssessmentFieldErrors>({});
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +24,17 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const data = normalizeAssessmentInput(
+      Object.fromEntries(formData.entries()) as Record<string, unknown>
+    );
+    const errors = validateAssessment(data);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setSubmitting(false);
+      setError(firstAssessmentError(errors));
+      return;
+    }
 
     try {
       const res = await fetch("/api/assessment", {
@@ -46,14 +43,35 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) throw new Error("Request failed");
+      const body = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        fieldErrors?: AssessmentFieldErrors;
+      };
+
+      if (!res.ok) {
+        if (body.fieldErrors) setFieldErrors(body.fieldErrors);
+        throw new Error(body.error || "Request failed");
+      }
 
       router.push("/thank-you?from=assessment");
     } catch (err) {
       console.error(err);
       setSubmitting(false);
-      setError("Something went wrong sending your request. Please try again, or email Vijay directly.");
+      setError(
+        err instanceof Error && err.message && err.message !== "Request failed"
+          ? err.message
+          : "Something went wrong sending your request. Please try again, or email Vijay directly."
+      );
     }
+  }
+
+  function clearFieldError(name: keyof AssessmentFieldErrors) {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
   }
 
   return (
@@ -85,62 +103,117 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
         <div className="mt-4 h-px w-12 bg-[var(--color-brass)]" />
       </div>
 
-      <form className="mt-6" onSubmit={handleSubmit}>
+      <form className="mt-6" onSubmit={handleSubmit} noValidate>
         <div className="grid grid-cols-1 gap-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Full Name" htmlFor="fullName">
+            <Field
+              label="Full Name"
+              htmlFor="fullName"
+              error={fieldErrors.fullName}
+            >
               <input
                 id="fullName"
                 name="fullName"
                 type="text"
                 required
                 autoComplete="name"
-                className="input"
+                maxLength={80}
+                pattern="[A-Za-z][A-Za-z .'\-]{1,78}"
+                title="Letters, spaces, hyphens, or apostrophes"
+                className={inputClass(fieldErrors.fullName)}
                 placeholder="Your name"
+                onChange={() => clearFieldError("fullName")}
               />
             </Field>
-            <Field label="Work Email" htmlFor="workEmail">
+            <Field
+              label="Work Email"
+              htmlFor="workEmail"
+              error={fieldErrors.workEmail}
+            >
               <input
                 id="workEmail"
                 name="workEmail"
                 type="email"
                 required
                 autoComplete="email"
-                className="input"
+                maxLength={254}
+                pattern="[A-Za-z][A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]*@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+"
+                title="Email must start with a letter and cannot be only numbers"
+                className={inputClass(fieldErrors.workEmail)}
                 placeholder="you@company.com"
+                onChange={() => clearFieldError("workEmail")}
               />
             </Field>
           </div>
 
+          <Field label="Phone Number" htmlFor="phone" required={false} error={fieldErrors.phone}>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              maxLength={25}
+              inputMode="tel"
+              pattern="\+?[\d\s().\-]{7,25}"
+              title="7–15 digits; spaces or + allowed"
+              className={inputClass(fieldErrors.phone)}
+              placeholder="+44 7784 419 117"
+              onChange={() => clearFieldError("phone")}
+            />
+          </Field>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Company" htmlFor="company">
+            <Field label="Company" htmlFor="company" error={fieldErrors.company}>
               <input
                 id="company"
                 name="company"
                 type="text"
                 required
                 autoComplete="organization"
-                className="input"
+                maxLength={120}
+                pattern="[A-Za-z0-9][A-Za-z0-9 .,&'\-/()]{1,118}"
+                title="Enter a valid company name"
+                className={inputClass(fieldErrors.company)}
+                onChange={() => clearFieldError("company")}
               />
             </Field>
-            <Field label="Job Title" htmlFor="jobTitle">
+            <Field
+              label="Job Title"
+              htmlFor="jobTitle"
+              error={fieldErrors.jobTitle}
+            >
               <input
                 id="jobTitle"
                 name="jobTitle"
                 type="text"
                 required
                 autoComplete="organization-title"
-                className="input"
+                maxLength={100}
+                pattern="[A-Za-z][A-Za-z0-9 .,&'\-/()]{1,98}"
+                title="Enter a valid job title"
+                className={inputClass(fieldErrors.jobTitle)}
+                onChange={() => clearFieldError("jobTitle")}
               />
             </Field>
           </div>
 
-          <Field label="Which of these is closest to your situation?" htmlFor="situation">
-            <select id="situation" name="situation" required defaultValue="" className="input">
+          <Field
+            label="Which of these is closest to your situation?"
+            htmlFor="situation"
+            error={fieldErrors.situation}
+          >
+            <select
+              id="situation"
+              name="situation"
+              required
+              defaultValue=""
+              className={inputClass(fieldErrors.situation)}
+              onChange={() => clearFieldError("situation")}
+            >
               <option value="" disabled>
                 Select an option
               </option>
-              {SITUATIONS.map((s) => (
+              {ASSESSMENT_SITUATIONS.map((s) => (
                 <option key={s} value={s}>
                   {s}
                 </option>
@@ -149,18 +222,23 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
           </Field>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Company size" htmlFor="companySize">
+            <Field
+              label="Company size"
+              htmlFor="companySize"
+              error={fieldErrors.companySize}
+            >
               <select
                 id="companySize"
                 name="companySize"
                 required
                 defaultValue=""
-                className="input"
+                className={inputClass(fieldErrors.companySize)}
+                onChange={() => clearFieldError("companySize")}
               >
                 <option value="" disabled>
                   Select an option
                 </option>
-                {COMPANY_SIZES.map((s) => (
+                {ASSESSMENT_COMPANY_SIZES.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
@@ -168,12 +246,23 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
               </select>
             </Field>
 
-            <Field label="What's driving this now?" htmlFor="driver">
-              <select id="driver" name="driver" required defaultValue="" className="input">
+            <Field
+              label="What's driving this now?"
+              htmlFor="driver"
+              error={fieldErrors.driver}
+            >
+              <select
+                id="driver"
+                name="driver"
+                required
+                defaultValue=""
+                className={inputClass(fieldErrors.driver)}
+                onChange={() => clearFieldError("driver")}
+              >
                 <option value="" disabled>
                   Select an option
                 </option>
-                {DRIVERS.map((d) => (
+                {ASSESSMENT_DRIVERS.map((d) => (
                   <option key={d} value={d}>
                     {d}
                   </option>
@@ -215,13 +304,23 @@ export function AssessmentForm({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function inputClass(error?: string) {
+  return error
+    ? "input border-red-400/70 focus:border-red-400"
+    : "input";
+}
+
 function Field({
   label,
   htmlFor,
+  required = true,
+  error,
   children,
 }: {
   label: string;
   htmlFor: string;
+  required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -231,9 +330,14 @@ function Field({
         className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]"
       >
         {label}
-        <span className="text-[var(--color-brass)]">*</span>
+        {required ? <span className="text-[var(--color-brass)]">*</span> : null}
       </label>
       {children}
+      {error ? (
+        <p className="mt-1.5 text-[12px] text-red-400" role="alert">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

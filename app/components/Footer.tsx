@@ -26,11 +26,11 @@ export function Footer() {
               href="https://www.linkedin.com/in/vijay-kanojia-13823814/"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-[14px] text-[var(--color-muted)] transition hover:text-[var(--color-brass)]"
+              className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#0A66C2] px-2.5 py-1.5 text-[13px] font-semibold text-white transition hover:bg-[#004182]"
             >
               <svg
-                width="16"
-                height="16"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden

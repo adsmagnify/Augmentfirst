@@ -37,6 +37,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Large media (GitHub 100MB limit). Keep locally; host on CDN for production.
+public/Augment_subtittled_video.mp4
+*.mp4
+!public/vijay_video.mp4
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

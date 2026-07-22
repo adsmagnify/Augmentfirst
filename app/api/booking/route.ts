@@ -4,6 +4,7 @@ import { createConfirmToken } from "@/app/lib/bookingToken";
 import { sendLeadEmail, sendConfirmationEmail } from "@/app/lib/mailer";
 import { renderLeadEmail, renderMessageEmail } from "@/app/lib/emailTemplate";
 import { getSiteUrl } from "@/app/lib/site";
+import { validateWorkEmail } from "@/app/lib/assessmentValidation";
 
 const DATE_KEY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -11,17 +12,22 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     const fullName = String(data.fullName ?? "").trim();
-    const email = String(data.email ?? "").trim();
+    const email = String(data.email ?? "").trim().toLowerCase();
     const company = String(data.company ?? "").trim();
     const dateKey = String(data.dateKey ?? "").trim();
     const time = String(data.requestedTime ?? data.time ?? "").trim();
     const displayDate = String(data.requestedDate ?? "").trim();
 
-    if (!fullName || !email) {
+    if (!fullName) {
       return NextResponse.json(
-        { error: "Full name and email are required." },
+        { error: "Full name is required." },
         { status: 400 }
       );
+    }
+
+    const emailError = validateWorkEmail(email);
+    if (emailError) {
+      return NextResponse.json({ error: emailError }, { status: 400 });
     }
 
     if (!dateKey || !DATE_KEY_RE.test(dateKey) || !time) {

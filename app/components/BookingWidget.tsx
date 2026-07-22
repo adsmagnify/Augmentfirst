@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { validateWorkEmail } from "@/app/lib/assessmentValidation";
 
 const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 // Hourly slots, 8:00 AM – 7:00 PM UK time (weekdays only)
@@ -154,6 +155,13 @@ export function BookingWidget({ className = "" }: { className?: string }) {
     setSubmitting(true);
     setError(null);
 
+    const emailError = validateWorkEmail(email);
+    if (emailError) {
+      setSubmitting(false);
+      setError(emailError);
+      return;
+    }
+
     const dateKey = toDateKey(selectedDate);
     const formattedDate = selectedDate.toLocaleDateString("en-US", {
       weekday: "long",
@@ -238,15 +246,17 @@ export function BookingWidget({ className = "" }: { className?: string }) {
             <label htmlFor="bookingEmail" className="mb-1.5 block text-[13px] font-medium text-[var(--color-ink)]">
               Work Email <span className="text-[var(--color-gold)]">*</span>
             </label>
-            <input
-              id="bookingEmail"
-              type="email"
-              required
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. john@company.com"
-            />
+              <input
+                id="bookingEmail"
+                type="email"
+                required
+                className="input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="e.g. john@company.com"
+                pattern="[A-Za-z][A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]*@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+"
+                title="Email must start with a letter and cannot be only numbers"
+              />
           </div>
 
           <div>
