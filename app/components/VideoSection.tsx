@@ -1,7 +1,12 @@
-const VIDEO_SRC =
-  process.env.NEXT_PUBLIC_VSL_VIDEO_URL?.trim() || "/vijay_video.mp4";
+import { connection } from "next/server";
 
-export function VideoSection() {
+export async function VideoSection() {
+  // Read env at request time so Vercel env changes apply without a stale static build.
+  await connection();
+
+  const videoSrc =
+    process.env.NEXT_PUBLIC_VSL_VIDEO_URL?.trim() || "/vijay_video.mp4";
+
   return (
     <section className="py-12 sm:py-20">
       <div className="mx-auto max-w-[800px] px-4 text-center sm:px-6">
@@ -15,8 +20,8 @@ export function VideoSection() {
 
         <div className="relative mx-auto mt-10 aspect-video w-full overflow-hidden border border-[var(--color-hairline)] bg-[#0a0c10]">
           <video
-            className="absolute inset-0 h-full w-full object-cover"
-            src={VIDEO_SRC}
+            className="absolute inset-0 h-full w-full object-contain bg-black"
+            src={videoSrc}
             controls
             playsInline
             preload="metadata"

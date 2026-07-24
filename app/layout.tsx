@@ -7,6 +7,7 @@ import "./globals.css";
 
 const GTM_ID = "GTM-KQP7TD6R";
 const GOOGLE_ADS_ID = "AW-18241571886";
+const CLARITY_ID = "xrcqzurhss";
 
 const libreBaskerville = Libre_Baskerville({
   variable: "--font-display",
@@ -142,6 +143,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GOOGLE_ADS_ID}');`}
+        </Script>
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${CLARITY_ID}");`}
         </Script>
         <script
           type="application/ld+json"
